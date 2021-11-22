@@ -1,5 +1,7 @@
 // Joshua Pearson 2021 UE4
 
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 
@@ -25,6 +27,8 @@ void UOpenDoor::BeginPlay()
 	if (!PressurePlate) {
 		UE_LOG(LogTemp, Error, TEXT("%s has the OpenDoor component on it but no PressurePlate set!"), *GetOwner()->GetName());
 	}
+
+	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
@@ -33,9 +37,16 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorThatOpens))
+	if (PressurePlate)
 	{
-		OpenDoor(DeltaTime);
+		if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+		{
+			OpenDoor(DeltaTime);
+		}
+		else 
+		{
+			CloseDoor(DeltaTime);
+		}
 	}
 }
 
@@ -43,5 +54,12 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 {
 	FRotator CurrentRotation = GetOwner()->GetActorRotation();
 	CurrentRotation.Yaw = FMath::FInterpTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, 3);
+	GetOwner()->SetActorRotation(CurrentRotation);
+}
+
+void UOpenDoor::CloseDoor(float DeltaTime)
+{
+	FRotator CurrentRotation = GetOwner()->GetActorRotation();
+	CurrentRotation.Yaw = FMath::FInterpTo(CurrentRotation.Yaw, InitialYaw, DeltaTime, 3);
 	GetOwner()->SetActorRotation(CurrentRotation);
 }
