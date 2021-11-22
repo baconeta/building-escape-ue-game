@@ -23,7 +23,7 @@ void UOpenDoor::BeginPlay()
 	TargetYaw = InitialYaw - 90.f;
 
 	if (!PressurePlate) {
-		UE_LOG(LogTemp, Warning, TEXT("%s has the OpenDoor component on it but no PressurePlate set"), *GetOwner()->GetName());
+		UE_LOG(LogTemp, Error, TEXT("%s has the OpenDoor component on it but no PressurePlate set!"), *GetOwner()->GetName());
 	}
 }
 
