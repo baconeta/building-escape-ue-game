@@ -27,10 +27,13 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("There is no PhysicsHandleComponent attached to %s."), *GetOwner()->GetName());
 	}
+
+	// Input bindings
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("There is an InputComponent attached to %s."), *GetOwner()->GetName());
+		InputComponent->BindAction("Release", IE_Released, this, &UGrabber::Release);
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 	}
 }
 
@@ -71,3 +74,12 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 }
 
+void UGrabber::Grab() 
+{
+	// Grab item
+}
+
+void UGrabber::Release() 
+{
+	// Grab item
+}
