@@ -29,22 +29,25 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-					/* Visual (debug) representation of raycasting */
-	// DrawDebugLine(
-	// 	GetWorld(), PlayerViewLocation, LineTraceEnd , FColor(0, 255, 0), false, 0.f, 0, 5.f
-	// );
-
-	// See what we are hitting with it
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		PhysicsHandle->SetTargetLocation(GetLocationOfPlayerViewReach());
+	}
 	
 }
 
 void UGrabber::Grab() 
 {
-	GetFirstPhysicsBodyWithinReach();
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerViewRotation);
 
-	// Try and reach any actors with physics body collision channel set
+	FHitResult HitBody = GetFirstPhysicsBodyWithinReach();
+	UPrimitiveComponent* ComponentToGrab = HitBody.GetComponent();
+	FVector LineTraceEnd = GetLocationOfPlayerViewReach();
 
-	// If we hit something then attach the physics handle.
+	if (HitBody.GetActor())
+	{
+		PhysicsHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, LineTraceEnd);
+	}
 }
 
 void UGrabber::Release() 
@@ -73,13 +76,9 @@ void UGrabber::SetupInputComponent()
 	}
 }
 
-FHitResult UGrabber::GetFirstPhysicsBodyWithinReach() const 
+FHitResult UGrabber::GetFirstPhysicsBodyWithinReach() 
 {
-	FVector PlayerViewLocation;
-	FRotator PlayerViewRotation;
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerViewRotation);
-
-	FVector LineTraceEnd = PlayerViewLocation + PlayerViewRotation.Vector() * Reach;
+	FVector LineTraceEnd = GetLocationOfPlayerViewReach();
 	FHitResult Hit;
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
 
@@ -98,4 +97,13 @@ FHitResult UGrabber::GetFirstPhysicsBodyWithinReach() const
 	}
 
 	return Hit;
+}
+
+FVector UGrabber::GetLocationOfPlayerViewReach()
+{
+	FVector PlayerViewLocation;
+	FRotator PlayerViewRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerViewRotation);
+
+	return PlayerViewLocation + PlayerViewRotation.Vector() * Reach;
 }
