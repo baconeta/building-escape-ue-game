@@ -14,7 +14,7 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	// ...	
 }
 
 
@@ -23,10 +23,13 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	// Check for PhysicsHandle Component
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("There is no PhysicsHandleComponent attached to %s."), *GetOwner()->GetName());
+	}
 }
-
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -37,7 +40,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FRotator PlayerViewRotation;
 	// Get player viewpoint
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerViewRotation);
-	
 
 	// Ray-cast out to a certain distance (reach)
 	FVector LineTraceEnd = PlayerViewLocation + PlayerViewRotation.Vector() * Reach;
@@ -64,11 +66,5 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		UE_LOG(LogTemp, Error, TEXT("Line trace hit %s."), *(ActorHit->GetName()));
 	}
-	
-	
-	
-	// UE_LOG(LogTemp, Warning, TEXT("Player Viewpoint Location: %s, Player Viewpoint Rotation: %s"),
-		// *PlayerViewLocation.ToString(),
-		// *PlayerViewRotation.ToString());
 }
 
