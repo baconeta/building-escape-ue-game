@@ -1,7 +1,9 @@
 // Joshua Pearson 2021 UE4
 
-
+#include "GameFramework/PlayerController.h"
 #include "Grabber.h"
+
+#define OUT 
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -29,6 +31,14 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// Get player viewpoint
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerViewRotation);
+	UE_LOG(LogTemp, Warning, TEXT("Player Viewpoint Location: %s, Player Viewpoint Rotation: %s"),
+		*PlayerViewLocation.ToString(),
+		*PlayerViewRotation.ToString());
+
+	// Ray-cast out to a certain distance (reach)
+
+	// See what we are hitting with it
 }
 
