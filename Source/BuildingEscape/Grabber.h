@@ -28,6 +28,7 @@ private:
 	void Release();
 	void FindPhysicsHandle();
 	void SetupInputComponent();
+	FHitResult GetFirstPhysicsBodyWithinReach() const;
 
 	UPROPERTY(EditAnywhere)
 	float Reach = 200;
