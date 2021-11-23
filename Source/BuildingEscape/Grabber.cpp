@@ -33,7 +33,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		PhysicsHandle->SetTargetLocation(GetLocationOfPlayerViewReach());
 	}
-	
 }
 
 void UGrabber::Grab() 
