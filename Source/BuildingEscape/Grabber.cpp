@@ -15,26 +15,13 @@ UGrabber::UGrabber()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Check for PhysicsHandle Component
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (!PhysicsHandle)
-	{
-		UE_LOG(LogTemp, Error, TEXT("There is no PhysicsHandleComponent attached to %s."), *GetOwner()->GetName());
-	}
-
-	// Input bindings
-	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
-	if (InputComponent)
-	{
-		InputComponent->BindAction("Release", IE_Released, this, &UGrabber::Release);
-		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
-	}
+	FindPhysicsHandle();
+	SetupInputComponent();	
 }
 
 // Called every frame
@@ -81,5 +68,26 @@ void UGrabber::Grab()
 
 void UGrabber::Release() 
 {
-	// Grab item
+	// Drop item
+}
+
+void UGrabber::FindPhysicsHandle() 
+{
+	// Check for PhysicsHandle Component
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("There is no PhysicsHandleComponent attached to %s."), *GetOwner()->GetName());
+	}
+}
+
+void UGrabber::SetupInputComponent()
+{
+	// Input bindings
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
 }
