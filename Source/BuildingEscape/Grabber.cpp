@@ -1,9 +1,9 @@
 // Joshua Pearson 2021 UE4
 
+#include "Grabber.h"
 #include "CollisionQueryParams.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/PlayerController.h"
-#include "Grabber.h"
 
 #define OUT 
 
@@ -52,7 +52,12 @@ void UGrabber::Grab()
 
 void UGrabber::Release() 
 {
-	// Remove/release the physics handle
+	UPrimitiveComponent* ComponentInHand = PhysicsHandle->GetGrabbedComponent();
+
+	if (ComponentInHand)
+	{
+		PhysicsHandle->ReleaseComponent();
+	}
 }
 
 void UGrabber::FindPhysicsHandle() 
@@ -101,8 +106,6 @@ FHitResult UGrabber::GetFirstPhysicsBodyWithinReach()
 
 FVector UGrabber::GetLocationOfPlayerViewReach()
 {
-	FVector PlayerViewLocation;
-	FRotator PlayerViewRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerViewRotation);
 
 	return PlayerViewLocation + PlayerViewRotation.Vector() * Reach;
