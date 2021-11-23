@@ -28,11 +28,9 @@ private:
 	void Release();
 	void FindPhysicsHandle();
 	void SetupInputComponent();
-	FHitResult GetFirstPhysicsBodyWithinReach();
-	FVector GetLocationOfPlayerViewReach();
-
-	FVector PlayerViewLocation;
-	FRotator PlayerViewRotation;
+	FHitResult GetFirstPhysicsBodyWithinReach() const;
+	FVector GetLocationOfPlayerViewReach() const;
+	FVector GetPlayerLocation() const;
 
 	UPROPERTY(EditAnywhere)
 	float Reach = 200;
