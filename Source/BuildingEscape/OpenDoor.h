@@ -26,6 +26,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OpenDoor(float DeltaTime);
 	void CloseDoor(float DeltaTime);
+	void FindAudioComponent();
+	void FindPressurePlate();
 	float GetTotalMassOfActors() const;
 
 private:
@@ -52,4 +54,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float MassToOpenDoor = 50.f;
+
+	UPROPERTY()
+	UAudioComponent* AudioComponent = nullptr;
+
+	bool SoundPlayed = false;
 };

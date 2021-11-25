@@ -33,8 +33,10 @@ private:
 	FVector GetPlayerLocation() const;
 
 	UPROPERTY(EditAnywhere)
-	float Reach = 200;
-
+	float Reach = 300;
+	
+	UPROPERTY()
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UPROPERTY()
 	UInputComponent* InputComponent = nullptr;
 };
