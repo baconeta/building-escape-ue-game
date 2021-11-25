@@ -28,7 +28,8 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
+	if (!PhysicsHandle) { return; }
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(GetLocationOfPlayerViewReach());
@@ -39,9 +40,11 @@ void UGrabber::Grab()
 {
 	FHitResult HitBody = GetFirstPhysicsBodyWithinReach();
 	UPrimitiveComponent* ComponentToGrab = HitBody.GetComponent();
+	AActor* ActorHit = HitBody.GetActor();
 
-	if (HitBody.GetActor())
+	if (ActorHit)
 	{
+		if (!PhysicsHandle) { return; }
 		PhysicsHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, GetLocationOfPlayerViewReach());
 	}
 }

@@ -49,9 +49,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate = nullptr;
-	
-	UPROPERTY(EditAnywhere)
-	AActor* ActorThatOpens = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	float MassToOpenDoor = 50.f;
