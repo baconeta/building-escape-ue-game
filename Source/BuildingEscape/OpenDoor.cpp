@@ -1,9 +1,12 @@
 // Joshua Pearson 2021 UE4
 
+#include "OpenDoor.h"
+#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
-#include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+
+#define OUT
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -35,7 +38,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (PressurePlate)
 	{
-		if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+		if (GetTotalMassOfActors() >= MassToOpenDoor)
 		{
 			OpenDoor(DeltaTime);
 			//Door last opened
@@ -63,4 +66,20 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator CurrentRotation = GetOwner()->GetActorRotation();
 	CurrentRotation.Yaw = FMath::FInterpTo(CurrentRotation.Yaw, InitialYaw, DeltaTime, DoorCloseSpeed);
 	GetOwner()->SetActorRotation(CurrentRotation);
+}
+
+float UOpenDoor::GetTotalMassOfActors() const
+{
+	float TotalMass = 0.f;
+
+	//Find all overlapping Actors
+	TArray<AActor*> OverlappingActors;
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		TotalMass =+ Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+	
+	return TotalMass;
 }
